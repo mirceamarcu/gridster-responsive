@@ -1,3 +1,6 @@
+.gridster ul, .gridster ol {
+    list-style: none;
+}
 .gridster{ display: none}
 .gridster .panel-heading{ height: 44px}
 .gridster .panel-body{
@@ -19,6 +22,4 @@
 	border: 1px dashed #000;
     opacity: 0.3;
 }
-.gridster ul, .gridster ol {
-    list-style: none;
-}
+

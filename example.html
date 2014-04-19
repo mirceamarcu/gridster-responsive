@@ -15,8 +15,10 @@
 		<script src="jquery.gridster.responsive.js"></script>
 
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 
+		<link href="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css" rel="stylesheet"/>
 
 	</head>
 
@@ -29,7 +31,7 @@
 				<li id="li1" data-row="1" data-col="1" data-sizex="1" data-sizey="5">
 					<div class="panel panel-default">
 					  <div class="panel-heading clearfix">
-						  <span class="panel-title pull-left"><span class="glyphicon glyphicon-asterisk"></span> Featuring</span>
+						  <span class="panel-title pull-left"><span class="glyphicon glyphicon-asterisk"></span> <span class="panel-title-text">Featuring</span></span>
 							<div class="widget-controls pull-right">
 								<div class="btn-group">
 									<select class="colorselector" data-id="">
@@ -69,7 +71,7 @@
 				<li id="li3" data-row="2" data-col="1" data-sizex="2" data-sizey="7">
 					<div class="panel panel-default">
 					  <div class="panel-heading clearfix">
-						  <span class="panel-title pull-left"><span class="glyphicon glyphicon-signal"></span> Graph Example</span>
+						  <span class="panel-title pull-left"><span class="glyphicon glyphicon-signal"></span> <span class="panel-title-text">Graph Example</span></span>
 							<div class="widget-controls pull-right">
 								<div class="btn-group">
 									<select class="colorselector" data-id="li3">
@@ -146,8 +148,10 @@
 			var localdata_position = JSON.parse(localStorage.getItem('dashboard.grid'));
 			var localdata_colors = JSON.parse(localStorage.getItem('dashboard.colors'));
 			var localdata_states = JSON.parse(localStorage.getItem('dashboard.states'));
+			var localdata_titles = JSON.parse(localStorage.getItem('dashboard.titles'));
 
-			fnCreateGridster('dashboard.grid', 'dashboard.colors', 'dashboard.states');
+
+			fnCreateGridster('dashboard.grid', 'dashboard.colors', 'dashboard.states', 'dashboard.titles');
 		</script>
 	</body>
 </html>

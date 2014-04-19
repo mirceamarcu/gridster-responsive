@@ -40,14 +40,19 @@ v1 Features
 - @OwlyCode's help @ https://gist.github.com/OwlyCode/6421823
 - Default its a two column layout but ya im sure you can do more, edit "var cols"
 
+**Widget Features**
+- Maxmimize
+- Minimize
+- Close
+- Edit Title
+- Edit Title Color
+
  
 
 Roadmap
 --------------
 - Would be neat to make use of github and git some help (git it? hahaha omfg) 
 - Check multi column support
-- fix desktop browser < 500px from being funky
-- fix color picker z-index issues
 
 
 

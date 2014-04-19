@@ -1,4 +1,4 @@
-function fnCreateGridster(page, colors, states){
+function fnCreateGridster(page, colors, states, titles){
 	/* load saved position and sizes */
 	if(localdata_position){
 		$.each(localdata_position, function(i,value){
@@ -6,23 +6,34 @@ function fnCreateGridster(page, colors, states){
 		});
 	}
 	
+	/* load titles */
+	if(localdata_titles){
+		$.each(localdata_titles, function(i,value){
+			if(value){
+				if(value.title) $('#'+ value.panel + ' .panel-title-text').html(value.title);
+			}
+		});
+	}
+
 
 	/* force 1 column on mobile screen sizes */
 	if ($( window ).width() <= 480 || $( window ).width() == 640 ){
 		var cols=1;
 		var offset=40;
 	} else {
-		var cols=2;
+		var cols=2
 		var offset=20;
 	}
 
-	
+
 	/* get the default size for the ratio */
 	var base_size=($( window ).width()/cols)-offset;
 
 
 	/* start gridster */
 	var gridster= $(".gridster > ul").gridster({
+        extra_cols: 1,
+        autogrow_cols: true,
 		min_cols:1,
 		max_cols:cols,
 		widget_margins: [5, 5],
@@ -36,52 +47,31 @@ function fnCreateGridster(page, colors, states){
          },
 		serialize_params: function($w, wgd) 
 		{
-			return {
-				id: $($w).attr('id'),col: wgd.col, row: wgd.row,size_x: wgd.size_x,size_y: wgd.size_y
-			};
+			return { id: $($w).attr('id'),col: wgd.col, row: wgd.row,size_x: wgd.size_x,size_y: wgd.size_y };
 		},
-		
 		draggable: 
 		{
 			handle: '.panel-heading, .panel-handel',
 			stop: function(event, ui) {
-				var positions = JSON.stringify(this.serialize());
+				var _positions=this.serialize();
+				$.each(_positions, function(i,value){
+					_state=$('#'+ value.id).attr('data-state');
+					if(_state=='min'){
+						value.size_y=$('#'+ value.id).attr('data-sizey-old')
+						_positions[i]=value;
+					}
+				
+				});
+				var positions = JSON.stringify(_positions);
 				localStorage.setItem(page, positions);
 			}
 		}	
     }).data('gridster');
 
-    
-	/* gridsters loaded so lets update the states */
-	if(localdata_states){
-		$.each(localdata_states, function(i,value){
-			if(value){
-				if(value.state == false) _state_minimize(value.panel);
-			}
-		});
-	}
-
 
 	/* start color selctor to change title colors */
 	$('.colorselector').colorselector({
-		callback: function (t,value, color, title) {
-		$('#'+t +' .panel-heading').css( "background-color", color );
-			var _color = {
-				panel: t,
-				color: color
-			  };
-
-			if(localdata_colors){
-				$.each(localdata_colors, function(i,value){
-					if(value){
-						if(value.panel == t) localdata_colors.splice(i, 1);		
-					}
-				});
-			} else localdata_colors=[];
-
-			localdata_colors.push(_color);
-			localStorage.setItem(colors, JSON.stringify(localdata_colors));
-          }
+		callback: function (t,value, color, title) { _save_colors(t, color); }
     });
 
 	/* load title colors */
@@ -91,8 +81,16 @@ function fnCreateGridster(page, colors, states){
 		});
 	}
 	
+	/* load states (after colors) */
+	if(localdata_states){
+		$.each(localdata_states, function(i,value){
+			if(value){
+				if(value.state == false) _state_minimize(value.panel);
+			}
+		});
+	}
 
-	/* register the minimize bu tton */
+	/* register the minimize button */
 	$(document).on("click", ".panel-hide", function(e) {
 		e.preventDefault();    
 		var panel = $(this).attr("data-id");
@@ -130,12 +128,14 @@ function fnCreateGridster(page, colors, states){
 		var panel = $(this).attr("data-id");
 		if($(this).hasClass('glyphicon-resize-small')){
 
+			$('.main-nav').show();
 			$('#'+panel).find('.hide-full').show();
 			$('#'+panel +' .gs-resize-handle').hide();
 			$('#'+panel).css({'position':'absolute', 'top':$('#'+panel).attr('data-top'), 'left':$('#'+panel).attr('data-left'),'width':$('#'+panel).attr('data-width'), 'height':$('#'+panel).attr('data-height'), 'z-index':'0'});
 			$(this).removeClass('glyphicon-resize-small').addClass('glyphicon-resize-full');
 
 		} else {
+			$('.main-nav').hide();
 			var _position=$('#'+panel).position();
 			$('#'+panel).attr({
 				'data-width': $('#'+panel).width(), 
@@ -153,7 +153,6 @@ function fnCreateGridster(page, colors, states){
 		return false;
 	});
 
-
 	/* register the close button (needs save) */
 	$(document).on("click", ".panel-close", function(e) {
 		e.preventDefault();    
@@ -170,6 +169,7 @@ function fnCreateGridster(page, colors, states){
 
 	/* helpers */
 	function _state_maxamize(panel){
+		$('#'+panel +'').attr('data-state', 'max');
 		var _oldsize=parseInt($('#'+panel).attr('data-sizey-old'));
 		$('#'+panel +'').attr('data-sizey', _oldsize);
 		$(".gridster > ul").data('gridster').resize_widget($('#'+panel),$('#'+panel).attr('data-sizex'),_oldsize);
@@ -177,9 +177,11 @@ function fnCreateGridster(page, colors, states){
 		$('#'+panel +' .panel-body').slideDown();
 		$('#'+panel +' .panel-hide').removeClass('glyphicon-plus').addClass('glyphicon-minus');
 		$('#'+panel +' .gs-resize-handle').show();
+		$('#'+panel +' .panel-color, #'+panel +' .panel-max, #'+panel +' .panel-close').show();
 	}
 
 	function _state_minimize(panel){
+		$('#'+panel +'').attr('data-state', 'min');
 		$('#'+panel).attr('data-sizey-old', $('#'+panel).attr('data-sizey'));
 		$(".gridster > ul").data('gridster').resize_widget($('#'+panel),$('#'+panel).attr('data-sizex'),1);
 		$('#'+panel).attr('data-sizey', '1');
@@ -187,15 +189,66 @@ function fnCreateGridster(page, colors, states){
 		$('#'+panel +' .panel-body').slideUp();
 		$('#'+panel +' .panel-hide').removeClass('glyphicon-minus').addClass('glyphicon-plus');
 		$('#'+panel +' .panel').css('padding-bottom', '0px');
+		$('#'+panel +' .panel-color, #'+panel +' .panel-max, #'+panel +' .panel-close').hide();
 	}
 
 	function _resize_gridster(){
+
+
 		gridster.resize_widget_dimensions({
 			widget_base_dimensions: [(((base_size*($( window ).width()/base_size))/cols)-offset), 50],
 			widget_margins: [5, 5],
 		});
+
+			console.log(cols);
 	}
 
+	function _save_titles(th, newValue){
+		var t= $(th).parents('li').attr('id');
+		var _title = {
+			panel: t,
+			title: newValue
+		  };
+
+		if(localdata_titles){
+			$.each(localdata_titles, function(i,value){
+				if(value){
+					if(value.panel == t) localdata_titles.splice(i, 1);		
+				}
+			});
+		} else localdata_titles=[];
+
+		localdata_titles.push(_title);
+		localStorage.setItem(titles, JSON.stringify(localdata_titles));
+	}
+
+	function _save_colors(t, color){
+		$('#'+t +' .panel-heading').css( "background-color", color );
+
+		var _color = {
+			panel: t,
+			color: color
+		  };
+
+		if(localdata_colors){
+			$.each(localdata_colors, function(i,value){
+				if(value){
+					if(value.panel == t) localdata_colors.splice(i, 1);		
+				}
+			});
+		} else localdata_colors=[];
+
+		localdata_colors.push(_color);
+		localStorage.setItem(colors, JSON.stringify(localdata_colors));
+	}
+
+	/* make titles editable */
+	$('.panel-title-text').editable({
+		mode:'inline',
+		showbuttons: 'false',
+		placeholder: 'Title',
+		success: function(response, newValue) { _save_titles(this, newValue); }
+	});
 
 	/* we're ready for the show */
 	$(window).on('resize load',_resize_gridster);
