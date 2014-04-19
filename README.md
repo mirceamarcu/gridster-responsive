@@ -38,7 +38,7 @@ v1 Features
 - Color Selector, it was basic, having index issues but eh, it works for now (https://github.com/flaute/bootstrap-colorselector)
 - Bootstrap & jQuery - duh!
 - @OwlyCode's help @ https://gist.github.com/OwlyCode/6421823
-- Default its a two column layout but ya im sure you can do more, edit "var cols"
+- Only works for a 2 column layout
 
 **Widget Features**
 - Maxmimize
