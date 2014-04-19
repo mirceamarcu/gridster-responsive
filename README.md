@@ -3,6 +3,10 @@ gridster-responsive
 
 A bootstrapped responsive solution for the Gridster.net javascript drag and drop (dash board) solution
 
+![Alt text](http://i.imgur.com/rie4hKr.png)
+
+
+
 
 OMG I sooo wanted "jarvis widgets"
 --------------
