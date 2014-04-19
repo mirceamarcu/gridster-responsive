@@ -5,7 +5,7 @@
 .gridster .panel-heading{ min-height: 44px; overflow:hidden}
 .gridster .panel-body{
 	height:inherit;
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 }
 .gridster .panel{

@@ -85,7 +85,10 @@ function fnCreateGridster(page, colors, states, titles){
 	if(localdata_states){
 		$.each(localdata_states, function(i,value){
 			if(value){
-				if(value.state == false) _state_minimize(value.panel);
+				console.log(value);
+				if(value.state == 'closed'){
+					$(".gridster > ul").data('gridster').remove_widget($('#'+value.panel));
+				}else if(value.state == false) _state_minimize(value.panel);
 			}
 		});
 	}
@@ -102,24 +105,8 @@ function fnCreateGridster(page, colors, states, titles){
 			_state_maxamize(panel);
 			var _state=true;
 		}
+		_state_update(panel, _state);
 
-		var _states = {
-			panel: panel,
-			state: _state
-		  };
-
-		if(localdata_states){
-			$.each(localdata_states, function(i,value){
-				if(value){
-					if(value.panel == panel) localdata_states.splice(i, 1);		
-				}
-			});
-		} else localdata_states=[];
-
-		localdata_states.push(_states);
-		localStorage.setItem(states, JSON.stringify(localdata_states));
-
-		return false;
 	});
 
 	/* register the maximize button */
@@ -149,25 +136,43 @@ function fnCreateGridster(page, colors, states, titles){
 			$('#'+panel +' .gs-resize-handle').show();
 			$('#'+panel).find('.hide-full').hide();
 		}
-
-		return false;
 	});
 
-	/* register the close button (needs save) */
+	/* register the close button */
 	$(document).on("click", ".panel-close", function(e) {
 		e.preventDefault();    
 		var panel = $(this).attr("data-id");
-		
-			bootbox.confirm('Are you sure?', function(result) {
-				if(result){
-					$(".gridster > ul").data('gridster').remove_widget($('#'+panel));
-				}
-			});
-		
-		return false;
+		bootbox.confirm('Are you sure?', function(result) {
+			if(result){
+				$(".gridster > ul").data('gridster').remove_widget($('#'+panel));
+				_state_update(panel, 'closed');
+			}
+		});
 	});
 
+
+
+
 	/* helpers */
+
+	function _state_update(panel, _state){
+		var _states = {
+			panel: panel,
+			state: _state
+		  };
+
+		if(localdata_states){
+			$.each(localdata_states, function(i,value){
+				if(value){
+					if(value.panel == panel) localdata_states.splice(i, 1);		
+				}
+			});
+		} else localdata_states=[];
+
+		localdata_states.push(_states);
+		localStorage.setItem(states, JSON.stringify(localdata_states));
+	}
+
 	function _state_maxamize(panel){
 		$('#'+panel +'').attr('data-state', 'max');
 		var _oldsize=parseInt($('#'+panel).attr('data-sizey-old'));
@@ -193,14 +198,10 @@ function fnCreateGridster(page, colors, states, titles){
 	}
 
 	function _resize_gridster(){
-
-
 		gridster.resize_widget_dimensions({
 			widget_base_dimensions: [(((base_size*($( window ).width()/base_size))/cols)-offset), 50],
 			widget_margins: [5, 5],
 		});
-
-			console.log(cols);
 	}
 
 	function _save_titles(th, newValue){
@@ -252,5 +253,10 @@ function fnCreateGridster(page, colors, states, titles){
 
 	/* we're ready for the show */
 	$(window).on('resize load',_resize_gridster);
-	$('.gridster').fadeIn();
+
+	/* give it a bit to fully load then fade in */
+	setTimeout(function(){
+		$('.gridster').fadeIn('fast');
+	}, 400);
+
 }
