@@ -22,7 +22,7 @@ Dashboard Widgets
 
 Every admin panel has a dash board but there are no real, free, solutions to enable developers to add these dashboard control features without doing ALL the work themselves. My goal of this project is to create an open source version of "Jarvis Widgets" that everyone can use for free.
 
-'Have a widget request?'
+**Have a widget request?**
 
 Let me know! As the development goes on I will be adding more widget control features.
 
