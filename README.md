@@ -16,6 +16,9 @@ If you ever see those fancy bootstrap admin templates you might have came across
 I wanted to make my own "dashboard" and Jarvis had the idea, just not a MIT based source code, so here we are...
 
 
+**Jarvis Widget 2.0 Example**
+![Alt text](http://i.imgur.com/asGeAYP.png)
+
 
 Dashboard Widgets
 --------------
