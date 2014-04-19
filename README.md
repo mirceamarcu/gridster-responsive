@@ -35,8 +35,8 @@ v1 Features
 --------------
 
 - Pretty responsive, I mean common its 5:30am and I'm hungry.
-- Color Selector, it was basic, having index issues but eh, it works for now (https://github.com/flaute/bootstrap-colorselector)
-- Bootstrap & jQuery - duh!
+- Color Selector @ https://github.com/flaute/bootstrap-colorselector
+- Bootstrap3-editable @ http://vitalets.github.io/x-editable/
 - @OwlyCode's help @ https://gist.github.com/OwlyCode/6421823
 - Only works for a 2 column layout
 
