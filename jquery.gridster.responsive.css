@@ -2,7 +2,7 @@
     list-style: none;
 }
 .gridster{ display: none}
-.gridster .panel-heading{ height: 44px}
+.gridster .panel-heading{ min-height: 44px; overflow:hidden}
 .gridster .panel-body{
 	height:inherit;
 	overflow-y: scroll;
